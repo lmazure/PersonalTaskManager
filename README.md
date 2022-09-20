@@ -5,7 +5,7 @@ Yet another playground to
   in particular, see how to handle backward compatibility (I need that, I want to eat my dog food)
 - perform continuous deployment (hum… this one will be the most tricky)
 
-These goals will evolve as I move forward (if I am able to more forward, I doubt I will have a lot of time to work on this).
+These goals will evolve as I move forward (if I am able to move forward, I doubt I will have a lot of time to work on this).
 
 What I do not know yet:
 - Can I use a Git repo to store the transactions?
