@@ -1,0 +1,11 @@
+{
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "java.configuration.runtimes": [
+    {
+        "name": "JavaSE-18",
+        "path": "H:\\Documents\\tools\\jdk\\jdk-18.0.2.1"
+    }
+    ],
+    "cSpell.enabled": false,
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
