@@ -5,12 +5,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Task data exchanged between the client and the server
+ * Task as recorded by the database
  */
-public record Data(UUID uuid, ZonedDateTime clientTimeStamp, String humanId, String humanDescription) {
-    public Data {
+public record TaskDatabaseRecord(UUID uuid, ZonedDateTime clientTimeStamp, ZonedDateTime serverTimeStamp, String humanId, String humanDescription) {
+
+    public TaskDatabaseRecord {
         Objects.requireNonNull(uuid);
         Objects.requireNonNull(clientTimeStamp);
+        Objects.requireNonNull(serverTimeStamp);
         Objects.requireNonNull(humanId);
         Objects.requireNonNull(humanDescription);
     }

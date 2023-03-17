@@ -5,14 +5,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Task as recorded by the server
+ * Task data exchanged between the client and the server
  */
-public record Record(UUID uuid, ZonedDateTime clientTimeStamp, ZonedDateTime serverTimeStamp, String humanId, String humanDescription) {
-
-    public Record {
+public record TaskClientDTO(UUID uuid, ZonedDateTime clientTimeStamp, String humanId, String humanDescription) {
+    public TaskClientDTO {
         Objects.requireNonNull(uuid);
         Objects.requireNonNull(clientTimeStamp);
-        Objects.requireNonNull(serverTimeStamp);
         Objects.requireNonNull(humanId);
         Objects.requireNonNull(humanDescription);
     }

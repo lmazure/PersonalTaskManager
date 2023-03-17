@@ -19,7 +19,7 @@ public class App {
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(
            "jersey.config.server.provider.classnames",
-           EntryPoint.class.getCanonicalName());
+           TaskResource.class.getCanonicalName());
  
         try {
             jettyServer.start();
