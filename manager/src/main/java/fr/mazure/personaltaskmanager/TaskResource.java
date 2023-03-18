@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.Response;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import fr.mazure.Database;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -18,22 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/tasks")
 public class TaskResource {
     
-    static TaskDataAccess access = new TaskDataAccess();
-    static {
-        final UUID uuid = UUID.randomUUID();
-        final ZonedDateTime timestamp = ZonedDateTime.now();
-        final String id = "ID";
-        final String description = "description";
-        final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
-        try {
-            access.create(dataIn);
-        } catch (ExistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println(uuid);
-    }
- 
+
     @GET
     @Path("test")
     @Produces(MediaType.TEXT_PLAIN)
@@ -50,7 +36,7 @@ public class TaskResource {
         // code to retrieve task with specified ID from database
         TaskClientDto task;
         try {
-            task = convertDatabaseDTOToClientDTO(access.read(taskId));
+            task = convertDatabaseDTOToClientDTO(Database.get().read(taskId));
         } catch (UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -64,7 +50,7 @@ public class TaskResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTask(TaskClientDto task) {
         try {
-            access.create(convertClientDTOToDatabaseDTO(task));
+            Database.get().create(convertClientDTOToDatabaseDTO(task));
         } catch (ExistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -79,7 +65,7 @@ public class TaskResource {
     public Response updateTask(@PathParam("taskId") UUID taskId, TaskClientDto task) {
         // TODO ensure that taskId == task.uuid
         try {
-            access.update(convertClientDTOToDatabaseDTO(task));
+            Database.get().update(convertClientDTOToDatabaseDTO(task));
         } catch (UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -93,7 +79,7 @@ public class TaskResource {
     public Response deleteTask(@PathParam("taskId") UUID taskId) {
         // TODO ensure that taskId == task.uuid
         try {
-            access.delete(taskId);
+            Database.get().delete(taskId);
         } catch (UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
