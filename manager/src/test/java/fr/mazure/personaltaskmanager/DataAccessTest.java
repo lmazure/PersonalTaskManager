@@ -17,10 +17,10 @@ public class DataAccessTest {
         final ZonedDateTime timestamp = ZonedDateTime.now();
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO dataIn = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
 
         access.create(dataIn);
-        final TaskDatabaseDTO dataOut = access.read(uuid);
+        final TaskDatabaseDto dataOut = access.read(uuid);
         
         Assertions.assertEquals(uuid, dataOut.uuid());
         Assertions.assertEquals(timestamp, dataOut.clientTimeStamp());
@@ -36,16 +36,16 @@ public class DataAccessTest {
         final ZonedDateTime timestamp = ZonedDateTime.now().minus(2, ChronoUnit.MONTHS);
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO dataIn1 = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto dataIn1 = new TaskDatabaseDto(uuid, timestamp, id, description);
 
         final ZonedDateTime timestamp2 = ZonedDateTime.now();
         final String id2 = "ID2";
         final String description2 = "description2";
-        final TaskDatabaseDTO dataIn2 = new TaskDatabaseDTO(uuid, timestamp2, id2, description2);
+        final TaskDatabaseDto dataIn2 = new TaskDatabaseDto(uuid, timestamp2, id2, description2);
 
         access.create(dataIn1);
         access.update(dataIn2);
-        final TaskDatabaseDTO dataOut = access.read(uuid);
+        final TaskDatabaseDto dataOut = access.read(uuid);
         
         Assertions.assertEquals(uuid, dataOut.uuid());
         Assertions.assertEquals(timestamp2, dataOut.clientTimeStamp());
@@ -61,7 +61,7 @@ public class DataAccessTest {
         final ZonedDateTime timestamp = ZonedDateTime.now().minus(2, ChronoUnit.MONTHS);
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO dataIn1 = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto dataIn1 = new TaskDatabaseDto(uuid, timestamp, id, description);
 
         access.create(dataIn1);
         access.delete(uuid);
@@ -81,7 +81,7 @@ public class DataAccessTest {
         final ZonedDateTime timestamp = ZonedDateTime.now().minus(2, ChronoUnit.MONTHS);
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO dataIn1 = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto dataIn1 = new TaskDatabaseDto(uuid, timestamp, id, description);
 
         access.create(dataIn1);
         access.delete(uuid);
@@ -101,12 +101,12 @@ public class DataAccessTest {
         final ZonedDateTime timestamp = ZonedDateTime.now();
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO data = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto data = new TaskDatabaseDto(uuid, timestamp, id, description);
 
         final ZonedDateTime timestamp2 = ZonedDateTime.now();
         final String id2 = "ID2";
         final String description2 = "description2";
-        final TaskDatabaseDTO data2 = new TaskDatabaseDTO(uuid, timestamp2, id2, description2);
+        final TaskDatabaseDto data2 = new TaskDatabaseDto(uuid, timestamp2, id2, description2);
 
         ExistingRecordException thrown = Assertions.assertThrows(ExistingRecordException.class, () -> {
             access.create(data);

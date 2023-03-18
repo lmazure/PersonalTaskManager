@@ -12,3 +12,8 @@ What I do not know yet:
 - Is the performance high enough to replay the full log at startup?
 - Where will is deploy this?
 - What JS lib I will use for the UI?
+
+------
+
+Test on URL
+- http://localhost:8080/tasks/test

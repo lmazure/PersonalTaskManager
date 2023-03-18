@@ -24,7 +24,7 @@ public class TaskResource {
         final ZonedDateTime timestamp = ZonedDateTime.now();
         final String id = "ID";
         final String description = "description";
-        final TaskDatabaseDTO dataIn = new TaskDatabaseDTO(uuid, timestamp, id, description);
+        final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
         try {
             access.create(dataIn);
         } catch (ExistingRecordException e) {
@@ -46,9 +46,9 @@ public class TaskResource {
     @GET
     @Path("/{taskId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public TaskClientDTO getTask(@PathParam("taskId") UUID taskId) {
+    public TaskClientDto getTask(@PathParam("taskId") UUID taskId) {
         // code to retrieve task with specified ID from database
-        TaskClientDTO task;
+        TaskClientDto task;
         try {
             task = convertDatabaseDTOToClientDTO(access.read(taskId));
         } catch (UnexistingRecordException e) {
@@ -62,9 +62,9 @@ public class TaskResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTask(TaskClientDTO task) {
+    public Response createTask(TaskClientDto task) {
         try {
-            access.create(convertClientDTOToDataaseDTO(task));
+            access.create(convertClientDTOToDatabaseDTO(task));
         } catch (ExistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -76,10 +76,10 @@ public class TaskResource {
     @PUT
     @Path("/{taskId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateTask(@PathParam("taskId") UUID taskId, TaskClientDTO task) {
+    public Response updateTask(@PathParam("taskId") UUID taskId, TaskClientDto task) {
         // TODO ensure that taskId == task.uuid
         try {
-            access.update(convertClientDTOToDataaseDTO(task));
+            access.update(convertClientDTOToDatabaseDTO(task));
         } catch (UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -102,11 +102,13 @@ public class TaskResource {
         return Response.status(200).entity("Task deleted successfully").build();
     }
 
-    private TaskClientDTO convertDatabaseDTOToClientDTO(final TaskDatabaseDTO data) {
-        return new TaskClientDTO(data.uuid(), data.clientTimeStamp(), data.humanId(), data.humanDescription());
+    private TaskClientDto convertDatabaseDTOToClientDTO(final TaskDatabaseDto databaseDto) {
+        final String clientTimeStamp = databaseDto.clientTimeStamp().toString();
+        return new TaskClientDto(databaseDto.uuid(), clientTimeStamp, databaseDto.humanId(), databaseDto.humanDescription());
     }
 
-    private TaskDatabaseDTO convertClientDTOToDataaseDTO(final TaskClientDTO record) {
-        return new TaskDatabaseDTO(record.uuid(), record.clientTimeStamp(), record.humanId(), record.humanDescription());
+    private TaskDatabaseDto convertClientDTOToDatabaseDTO(final TaskClientDto clientDto) {
+        final ZonedDateTime clientTimeStamp = ZonedDateTime.parse(clientDto.clientTimeStamp());
+        return new TaskDatabaseDto(clientDto.uuid(), clientTimeStamp, clientDto.humanId(), clientDto.humanDescription());
     }
 }
