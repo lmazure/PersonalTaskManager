@@ -13,7 +13,7 @@ public class Database {
 
     public static void initialize() {
         if (access != null) {
-            throw new IllegalStateException("Database has been already initialized");
+            throw new IllegalStateException("Database has already been initialized");
         }
 
         access = new TaskDataAccess();
@@ -24,14 +24,14 @@ public class Database {
         final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
         try {
             access.create(dataIn);
-        } catch (ExistingRecordException e) {
+        } catch (final ExistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println(uuid);
     }
 
-    public static  TaskDataAccess get() {
+    public static TaskDataAccess get() {
         return access;
     }
 }

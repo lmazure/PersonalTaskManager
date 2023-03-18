@@ -32,12 +32,12 @@ public class TaskResource {
     @GET
     @Path("/{taskId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public TaskClientDto getTask(@PathParam("taskId") UUID taskId) {
+    public TaskClientDto getTask(@PathParam("taskId") final UUID taskId) {
         // code to retrieve task with specified ID from database
         TaskClientDto task;
         try {
             task = convertDatabaseDTOToClientDTO(Database.get().read(taskId));
-        } catch (UnexistingRecordException e) {
+        } catch (final UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             task = null;
@@ -48,10 +48,10 @@ public class TaskResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTask(TaskClientDto task) {
+    public Response createTask(final TaskClientDto task) {
         try {
             Database.get().create(convertClientDTOToDatabaseDTO(task));
-        } catch (ExistingRecordException e) {
+        } catch (final ExistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -62,11 +62,11 @@ public class TaskResource {
     @PUT
     @Path("/{taskId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateTask(@PathParam("taskId") UUID taskId, TaskClientDto task) {
+    public Response updateTask(@PathParam("taskId") final UUID taskId, final TaskClientDto task) {
         // TODO ensure that taskId == task.uuid
         try {
             Database.get().update(convertClientDTOToDatabaseDTO(task));
-        } catch (UnexistingRecordException e) {
+        } catch (final UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -76,11 +76,11 @@ public class TaskResource {
     
     @DELETE
     @Path("/{taskId}")
-    public Response deleteTask(@PathParam("taskId") UUID taskId) {
+    public Response deleteTask(@PathParam("taskId") final UUID taskId) {
         // TODO ensure that taskId == task.uuid
         try {
             Database.get().delete(taskId);
-        } catch (UnexistingRecordException e) {
+        } catch (final UnexistingRecordException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
