@@ -1,6 +1,7 @@
 package fr.mazure.personaltaskmanager;
 
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -32,18 +33,16 @@ public class TaskResource {
     @GET
     @Path("/{taskId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public TaskClientDto getTask(@PathParam("taskId") final UUID taskId) {
+    public Response getTask(@PathParam("taskId") final UUID taskId) {
         // code to retrieve task with specified ID from database
         TaskClientDto task;
         try {
             task = convertDatabaseDTOToClientDTO(Database.get().read(taskId));
         } catch (final UnexistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            task = null;
+            return Response.status(Status.NOT_FOUND.getStatusCode()).entity("Task not found").build();
         }
         
-        return task;
+        return Response.ok(task).build();
     }
     
     @POST
@@ -56,7 +55,7 @@ public class TaskResource {
             e.printStackTrace();
         }
         
-        return Response.status(201).entity("Task created successfully").build();
+        return Response.status(Status.CREATED.getStatusCode()).entity("Task created successfully").build();
     }
     
     @PUT
@@ -67,11 +66,10 @@ public class TaskResource {
         try {
             Database.get().update(convertClientDTOToDatabaseDTO(task));
         } catch (final UnexistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return Response.status(Status.NOT_FOUND.getStatusCode()).entity("Task not found").build();
         }
         
-        return Response.status(200).entity("Task updated successfully").build();
+        return Response.status(Status.OK.getStatusCode()).entity("Task updated successfully").build();
     }
     
     @DELETE
@@ -81,11 +79,10 @@ public class TaskResource {
         try {
             Database.get().delete(taskId);
         } catch (final UnexistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return Response.status(Status.NOT_FOUND.getStatusCode()).entity("Task not found").build();
         }
         
-        return Response.status(200).entity("Task deleted successfully").build();
+        return Response.status(Status.OK.getStatusCode()).entity("Task deleted successfully").build();
     }
 
     private TaskClientDto convertDatabaseDTOToClientDTO(final TaskDatabaseDto databaseDto) {
