@@ -51,8 +51,7 @@ public class TaskResource {
         try {
             Database.get().create(convertClientDTOToDatabaseDTO(task));
         } catch (final ExistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return Response.status(Status.CONFLICT.getStatusCode()).entity("Task already exists").build();
         }
         
         return Response.status(Status.CREATED.getStatusCode()).entity("Task created successfully").build();

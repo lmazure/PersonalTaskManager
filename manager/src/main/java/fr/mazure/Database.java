@@ -31,6 +31,13 @@ public class Database {
         System.out.println(uuid);
     }
 
+    public static void reset() {
+        if (access == null) {
+            throw new IllegalStateException("Database is not initialized");
+        }
+        access = null;
+    }
+
     public static TaskDataAccess get() {
         return access;
     }
