@@ -7,5 +7,6 @@
     }
     ],
     "cSpell.enabled": false,
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "maven.executable.path": "H:\\Documents\\tools\\maven\\3.8.4\\bin\\mvn"
 }
