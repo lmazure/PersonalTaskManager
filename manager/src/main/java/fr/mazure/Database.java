@@ -1,11 +1,6 @@
 package fr.mazure;
 
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
-import fr.mazure.personaltaskmanager.ExistingRecordException;
 import fr.mazure.personaltaskmanager.TaskDataAccess;
-import fr.mazure.personaltaskmanager.TaskDatabaseDto;
 
 public class Database {
 
@@ -17,18 +12,6 @@ public class Database {
         }
 
         access = new TaskDataAccess();
-        final UUID uuid = UUID.randomUUID();
-        final ZonedDateTime timestamp = ZonedDateTime.now();
-        final String id = "ID";
-        final String description = "description";
-        final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
-        try {
-            access.create(dataIn);
-        } catch (final ExistingRecordException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println(uuid);
     }
 
     public static void reset() {

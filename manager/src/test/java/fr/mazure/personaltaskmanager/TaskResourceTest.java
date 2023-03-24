@@ -91,4 +91,36 @@ public class TaskResourceTest extends JerseyTest {
        Assertions.assertEquals(Status.CONFLICT.getStatusCode(), responseCreate.getStatus());
        Assertions.assertEquals("Task already exists", responseCreate.readEntity(String.class));
     }
+
+    @Test
+    void testGetTasks() {
+        final Entity<String> jsonCreate1 = Entity.json("{\"uuid\":\"661d0edc-f1ae-477f-9bce-b4396de50801\",\"clientTimeStamp\":\"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]\",\"humanId\":\"IDc\",\"humanDescription\":\"one\"}");
+        final Entity<String> jsonCreate2 = Entity.json("{\"uuid\":\"661d0edc-f1ae-477f-9bce-b4396de50802\",\"clientTimeStamp\":\"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]\",\"humanId\":\"IDb\",\"humanDescription\":\"two\"}");
+        final Entity<String> jsonCreate3 = Entity.json("{\"uuid\":\"661d0edc-f1ae-477f-9bce-b4396de50803\",\"clientTimeStamp\":\"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]\",\"humanId\":\"IDa\",\"humanDescription\":\"three\"}");
+        final Entity<String> jsonCreate4 = Entity.json("{\"uuid\":\"661d0edc-f1ae-477f-9bce-b4396de50804\",\"clientTimeStamp\":\"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]\",\"humanId\":\"IDd\",\"humanDescription\":\"four\"}");
+        target("tasks").request().post(jsonCreate1);
+        target("tasks").request().post(jsonCreate2);
+        target("tasks").request().post(jsonCreate3);
+        target("tasks").request().post(jsonCreate4);
+
+        final Response responseGet = target("tasks/").request()
+                                                    .get();
+
+       Assertions.assertEquals(Status.OK.getStatusCode(), responseGet.getStatus());
+       Assertions.assertEquals("""
+               [{"uuid":"661d0edc-f1ae-477f-9bce-b4396de50803","clientTimeStamp":"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]","humanId":"IDa","humanDescription":"three"},\
+               {"uuid":"661d0edc-f1ae-477f-9bce-b4396de50802","clientTimeStamp":"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]","humanId":"IDb","humanDescription":"two"},\
+               {"uuid":"661d0edc-f1ae-477f-9bce-b4396de50801","clientTimeStamp":"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]","humanId":"IDc","humanDescription":"one"},\
+               {"uuid":"661d0edc-f1ae-477f-9bce-b4396de50804","clientTimeStamp":"2023-03-18T07:25:13.757705700+01:00[Europe/Paris]","humanId":"IDd","humanDescription":"four"}]\
+               """, responseGet.readEntity(String.class));
+    }
+
+    @Test
+    void testGetNoTasks() {
+        final Response responseGet = target("tasks/").request()
+                                                     .get();
+
+       Assertions.assertEquals(Status.OK.getStatusCode(), responseGet.getStatus());
+       Assertions.assertEquals("[]", responseGet.readEntity(String.class));
+    }
 }

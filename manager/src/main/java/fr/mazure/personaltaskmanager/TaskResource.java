@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import fr.mazure.Database;
@@ -15,26 +16,28 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/tasks")
 public class TaskResource {
     
-
     @GET
-    @Path("test")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test() {
-        return "Test salut à toi et aux autres";
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response test() {
+        final List<TaskClientDto> tasks = Database.get()
+                                                  .getTasks(t -> true, (t1, t2) -> t1.humanId().compareTo(t2.humanId()))
+                                                  .stream()
+                                                  .map(TaskResource::convertDatabaseDTOToClientDTO)
+                                                  .toList();
+        final GenericEntity<List<TaskClientDto>> entity  = new GenericEntity<List<TaskClientDto>>(tasks) {};
+        return Response.ok(entity).build();
     }
-
-    // TODO add the method to get all tasks
 
     @GET
     @Path("/{taskId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTask(@PathParam("taskId") final UUID taskId) {
-        // code to retrieve task with specified ID from database
         TaskClientDto task;
         try {
             task = convertDatabaseDTOToClientDTO(Database.get().read(taskId));
@@ -61,7 +64,10 @@ public class TaskResource {
     @Path("/{taskId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateTask(@PathParam("taskId") final UUID taskId, final TaskClientDto task) {
-        // TODO ensure that taskId == task.uuid
+        if (!task.uuid().equals(taskId)) {
+            return Response.status(Status.NOT_ACCEPTABLE.getStatusCode()).entity("UUID indicated un payload is incorrect").build();
+        }
+
         try {
             Database.get().update(convertClientDTOToDatabaseDTO(task));
         } catch (final UnexistingRecordException e) {
@@ -74,7 +80,6 @@ public class TaskResource {
     @DELETE
     @Path("/{taskId}")
     public Response deleteTask(@PathParam("taskId") final UUID taskId) {
-        // TODO ensure that taskId == task.uuid
         try {
             Database.get().delete(taskId);
         } catch (final UnexistingRecordException e) {
@@ -84,12 +89,12 @@ public class TaskResource {
         return Response.status(Status.OK.getStatusCode()).entity("Task deleted successfully").build();
     }
 
-    private TaskClientDto convertDatabaseDTOToClientDTO(final TaskDatabaseDto databaseDto) {
+    private static TaskClientDto convertDatabaseDTOToClientDTO(final TaskDatabaseDto databaseDto) {
         final String clientTimeStamp = databaseDto.clientTimeStamp().toString();
         return new TaskClientDto(databaseDto.uuid(), clientTimeStamp, databaseDto.humanId(), databaseDto.humanDescription());
     }
 
-    private TaskDatabaseDto convertClientDTOToDatabaseDTO(final TaskClientDto clientDto) {
+    private static TaskDatabaseDto convertClientDTOToDatabaseDTO(final TaskClientDto clientDto) {
         final ZonedDateTime clientTimeStamp = ZonedDateTime.parse(clientDto.clientTimeStamp());
         return new TaskDatabaseDto(clientDto.uuid(), clientTimeStamp, clientDto.humanId(), clientDto.humanDescription());
     }
