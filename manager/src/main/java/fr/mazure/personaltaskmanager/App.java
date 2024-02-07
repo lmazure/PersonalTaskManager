@@ -1,11 +1,9 @@
 package fr.mazure.personaltaskmanager;
 
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.servlet.ServletContainer;
-
-import fr.mazure.Database;
  
 public class App {
     public static void main(String[] args) throws Exception {

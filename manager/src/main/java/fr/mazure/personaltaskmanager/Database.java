@@ -1,6 +1,4 @@
-package fr.mazure;
-
-import fr.mazure.personaltaskmanager.TaskDataAccess;
+package fr.mazure.personaltaskmanager;
 
 public class Database {
 
