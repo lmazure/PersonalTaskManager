@@ -15,5 +15,17 @@ What I do not know yet:
 
 ------
 
+test
+```bash
+mvn -f manager/pom.xml clean test
+```
+
+build and run
+```bash
+mvn -f manager/pom.xml clean compile assembly:single
+java -jar manager/target/manager-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+
 Test on URL
 - http://localhost:8080/tasks/test
