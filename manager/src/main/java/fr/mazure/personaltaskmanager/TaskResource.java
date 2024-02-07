@@ -65,7 +65,7 @@ public class TaskResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateTask(@PathParam("taskId") final UUID taskId, final TaskClientDto task) {
         if (!task.uuid().equals(taskId)) {
-            return Response.status(Status.NOT_ACCEPTABLE.getStatusCode()).entity("UUID indicated un payload is incorrect").build();
+            return Response.status(Status.NOT_ACCEPTABLE.getStatusCode()).entity("UUID indicated in payload is incorrect").build();
         }
 
         try {
