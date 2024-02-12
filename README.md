@@ -1,7 +1,7 @@
 Yet another playground to
 - evaluate VSCode's Java support
 - discover GitHub Actions
-- implement an Event Sourcing ([https://martinfowler.com/eaaDev/EventSourcing.html]) architecture  
+- implement an Event Sourcing (https://martinfowler.com/eaaDev/EventSourcing.html) architecture  
   in particular, see how to handle backward compatibility (I need that, I want to eat my dog food)
 - perform continuous deployment (hum… this one will be the most tricky)
 
@@ -15,5 +15,13 @@ What I do not know yet:
 
 ------
 
+build and run
+```bash
+cd manager
+mvn -f pom.xml clean package
+java -jar target/manager-1.0.jar
+```
+
+
 Test on URL
-- http://localhost:8080/tasks/test
+- http://localhost:8080/tasks/

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class TaskDataAccess {
     
-    private Map<UUID, TaskDatabaseRecord> records;
+    private final Map<UUID, TaskDatabaseRecord> records;
     
     public TaskDataAccess() {
         this.records = new HashMap<>();

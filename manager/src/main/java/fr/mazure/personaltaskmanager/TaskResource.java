@@ -7,7 +7,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import fr.mazure.Database;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -65,7 +64,7 @@ public class TaskResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateTask(@PathParam("taskId") final UUID taskId, final TaskClientDto task) {
         if (!task.uuid().equals(taskId)) {
-            return Response.status(Status.NOT_ACCEPTABLE.getStatusCode()).entity("UUID indicated un payload is incorrect").build();
+            return Response.status(Status.NOT_ACCEPTABLE.getStatusCode()).entity("UUID indicated in payload is incorrect").build();
         }
 
         try {
