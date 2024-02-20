@@ -6,6 +6,33 @@
     <title>Document</title>
 </head>
 <body>
-Yes !!!    
+
+    <script>
+      fetch('http://localhost:8080/api/tasks/')
+        .then(response => response.json())
+        .then(data => {
+          const table = document.createElement('table');
+          table.innerHTML = `
+            <tr>
+              <th>UUID</th>
+              <th>Timestamp</th>
+              <th>ID</th>
+              <th>Description</th>
+            </tr>
+          `;
+          data.forEach(task => {
+            const row = table.insertRow(-1);
+            row.innerHTML = `
+              <td>${task.uuid}</td>
+              <td>${task.clientTimeStamp}</td>
+              <td>${task.humanId}</td>
+              <td>${task.humanDescription}</td>
+            `;
+          });
+          document.body.appendChild(table);
+        })
+        .catch(error => console.error('Error fetching tasks:', error));
+    </script>
+    
 </body>
 </html>

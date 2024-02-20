@@ -38,12 +38,30 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         Database.initialize();
-        final UUID uuid = UUID.randomUUID();
-        final ZonedDateTime timestamp = ZonedDateTime.now();
-        final String id = "ID";
-        final String description = "description";
-        final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
-        Database.get().create(dataIn);
+        {
+            final UUID uuid = UUID.randomUUID();
+            final ZonedDateTime timestamp = ZonedDateTime.now();
+            final String id = "ID";
+            final String description = "description";
+            final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
+            Database.get().create(dataIn);
+        }
+        {
+            final UUID uuid = UUID.randomUUID();
+            final ZonedDateTime timestamp = ZonedDateTime.now();
+            final String id = "ID2";
+            final String description = "description2";
+            final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
+            Database.get().create(dataIn);
+        }
+        {
+            final UUID uuid = UUID.randomUUID();
+            final ZonedDateTime timestamp = ZonedDateTime.now();
+            final String id = "ID3";
+            final String description = "description3";
+            final TaskDatabaseDto dataIn = new TaskDatabaseDto(uuid, timestamp, id, description);
+            Database.get().create(dataIn);
+        }
 
         try {
 
