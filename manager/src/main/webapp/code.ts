@@ -23,35 +23,37 @@ fetch('http://localhost:8080/api/tasks/')
     })
     .catch(error => console.error('Error fetching tasks:', error));
 
-function formatCurrentDate() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
-    const offset = -now.getTimezoneOffset() / 60;
-    const offsetSign = offset >= 0 ? '+' : '-';
-    const offsetHours = Math.abs(Math.floor(offset)).toString().padStart(2, '0');
-    const offsetMinutes = Math.abs(offset % 1 * 60).toString().padStart(2, '0');
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+function getUUID(): string {
+    return URL.createObjectURL(new Blob()).slice(-36);
+}
+
+function getTimestamp(): string {
+    const now: Date = new Date();
+    const year: number = now.getFullYear();
+    const month: string = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day: string = now.getDate().toString().padStart(2, '0');
+    const hours: string = now.getHours().toString().padStart(2, '0');
+    const minutes: string = now.getMinutes().toString().padStart(2, '0');
+    const seconds: string = now.getSeconds().toString().padStart(2, '0');
+    const milliseconds: string = now.getMilliseconds().toString().padStart(3, '0');
+    const offset: number = -now.getTimezoneOffset() / 60;
+    const offsetSign: string = offset >= 0 ? '+' : '-';
+    const offsetHours: string = Math.abs(Math.floor(offset)).toString().padStart(2, '0');
+    const offsetMinutes: string = Math.abs(offset % 1 * 60).toString().padStart(2, '0');
+    const timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}[${timezone}]`;
 }
 
-console.log(formatCurrentDate());
+console.log(getTimestamp());
 
 function openTaskDialog() {
-    const uuid = URL.createObjectURL(new Blob()).slice(-36);
-    const timestamps = formatCurrentDate();
-    const humanId = prompt('Enter human ID:');
-    const humanDescription = prompt('Enter human description:');
+    const humanId: string|null = prompt('Enter human ID:');
+    const humanDescription: string|null = prompt('Enter human description:');
 
     const taskData = {
-        uuid: uuid,
-        clientTimeStamp: timestamps,
+        uuid: getUUID(),
+        clientTimeStamp: getTimestamp(),
         humanId: humanId,
         humanDescription: humanDescription
     };

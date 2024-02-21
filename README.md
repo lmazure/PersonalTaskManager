@@ -23,6 +23,9 @@ Build and run
 ```bash
 cd manager
 mvn clean package
+cd src/main/webapp
+tsc
+cd ../../..
 java -jar target/manager-1.0.jar
 ```
 
