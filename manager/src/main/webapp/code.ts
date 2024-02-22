@@ -1,25 +1,18 @@
 "use strict";
 
-function displayTaskTable() {
+function displayTaskTable(): void {
     const table: HTMLTableElement = document.createElement('table');
     table.id = "taskTable";
-    table.innerHTML = `
-  <tr>
-    <th>UUID</th>
-    <th>Timestamp</th>
-    <th>ID</th>
-    <th>Description</th>
-  </tr>
-`;
+    table.innerHTML = `<tr><th>Timestamp</th><th>ID</th><th>Description</th></tr>`;
     document.body.appendChild(table);
 }
 
 displayTaskTable();
 
-function refreshTaskTable() {
+function refreshTaskTable(): void {
     fetch('http://localhost:8080/api/tasks/')
-        .then(response => response.json())
-        .then(data => {
+        .then((response: Response) => response.json())
+        .then((data: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }[]) => {
             const table: HTMLElement | null = document.getElementById('taskTable');
             if (!table) {
                 throw new Error('Task table not found');
@@ -33,14 +26,8 @@ function refreshTaskTable() {
             }
             data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
                 const row = table.insertRow(-1);
-                row.innerHTML = `
-            <td>${task.uuid}</td>
-            <td>${task.clientTimeStamp}</td>
-            <td>${task.humanId}</td>
-            <td>${task.humanDescription}</td>
-            `;
+                row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td>`;
             });
-            document.body.appendChild(table);
         })
         .catch(error => console.error('Error fetching tasks:', error));
 }
@@ -67,10 +54,13 @@ function getTimestamp(): string {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}[${timezone}]`;
 }
 
-function openTaskDialog() {
+function openTaskDialog(): void {
     const humanId: string | null = prompt('Enter human ID:');
+    if (humanId === null) {
+        return;
+    }
     const humanDescription: string | null = prompt('Enter human description:');
-    if (humanId === null || humanDescription === null) {
+    if (humanDescription === null) {
         return;
     }
 
@@ -83,23 +73,20 @@ function openTaskDialog() {
 
     fetch('http://localhost:8080/api/tasks/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(taskData)
     })
-        .then(response => {
+        .then((response: Response) => {
             if (response.ok) {
                 return response.text();
             } else {
                 throw new Error('Failed to create task: ' + response.status);
             }
         })
-        .then(data => {
-            console.log('Task created:', data);
-            // Optionally, you can refresh the task list or update the UI here.
+        .then((message: string) => {
+            console.log('Task created:', message);
+            refreshTaskTable();
         })
-        .catch(error => console.error('Error creating task: ', error));
+        .catch((error: string) => console.error('Error creating task: ', error));
 
-    refreshTaskTable();
 }
