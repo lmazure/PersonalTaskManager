@@ -10,39 +10,39 @@ function displayTaskTable() {
     <th>ID</th>
     <th>Description</th>
   </tr>
-`;    
-document.body.appendChild(table);
+`;
+    document.body.appendChild(table);
 }
 
 displayTaskTable();
 
-function refreshTaskTable() {   
+function refreshTaskTable() {
     fetch('http://localhost:8080/api/tasks/')
-    .then(response => response.json())
-    .then(data => {
-        const table: HTMLElement|null = document.getElementById('taskTable');
-        if (!table) {
-            throw new Error('Task table not found');
-        }
-        if (!(table instanceof HTMLTableElement)) {
-            throw new Error('Task table is not an HTMLTableElement');
-        }
-        // Remove all rows except for the header row
-        while (table.rows.length > 1) {
-            table.deleteRow(1);
-        }
-        data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
-            const row = table.insertRow(-1);
-            row.innerHTML = `
+        .then(response => response.json())
+        .then(data => {
+            const table: HTMLElement | null = document.getElementById('taskTable');
+            if (!table) {
+                throw new Error('Task table not found');
+            }
+            if (!(table instanceof HTMLTableElement)) {
+                throw new Error('Task table is not an HTMLTableElement');
+            }
+            // Remove all rows except for the header row
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
+                const row = table.insertRow(-1);
+                row.innerHTML = `
             <td>${task.uuid}</td>
             <td>${task.clientTimeStamp}</td>
             <td>${task.humanId}</td>
             <td>${task.humanDescription}</td>
             `;
-        });
-        document.body.appendChild(table);
-    })
-    .catch(error => console.error('Error fetching tasks:', error));
+            });
+            document.body.appendChild(table);
+        })
+        .catch(error => console.error('Error fetching tasks:', error));
 }
 
 function getUUID(): string {
@@ -68,8 +68,8 @@ function getTimestamp(): string {
 }
 
 function openTaskDialog() {
-    const humanId: string|null = prompt('Enter human ID:');
-    const humanDescription: string|null = prompt('Enter human description:');
+    const humanId: string | null = prompt('Enter human ID:');
+    const humanDescription: string | null = prompt('Enter human description:');
     if (humanId === null || humanDescription === null) {
         return;
     }
@@ -101,7 +101,5 @@ function openTaskDialog() {
         })
         .catch(error => console.error('Error creating task: ', error));
 
-        refreshTaskTable();
+    refreshTaskTable();
 }
-
-openTaskDialog();
