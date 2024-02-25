@@ -73,36 +73,39 @@ function deleteTask(taskId: string): void {
 }
 
 function openTaskDialog(taskId: string | null = null): void {
-    const dialog = document.createElement('dialog');
+    const dialog: HTMLDialogElement = document.createElement('dialog');
+    dialog.id = 'taskDialog';
     dialog.setAttribute('open', '');
 
-    const title = document.createElement('h3');
+    const title: HTMLHeadingElement = document.createElement('h3');
     title.textContent = taskId ? 'Edit Task' : 'Create Task';
     dialog.appendChild(title);
 
-    const form = document.createElement('form');
+    const form: HTMLFormElement = document.createElement('form');
+    form.id = 'taskForm';
     form.method = 'dialog';
 
-    const idLabel = document.createElement('label');
-    idLabel.textContent = 'Human ID:';
+    const idLabel: HTMLLabelElement = document.createElement('label');
+    idLabel.textContent = 'ID';
     form.appendChild(idLabel);
 
-    const idInput = document.createElement('input');
+    const idInput: HTMLInputElement = document.createElement('input');
     idInput.type = 'text';
     idInput.name = 'humanId';
     idInput.required = true;
     form.appendChild(idInput);
 
-    const descLabel = document.createElement('label');
-    descLabel.textContent = 'Description:';
+    const descLabel: HTMLLabelElement = document.createElement('label');
+    descLabel.textContent = 'Description';
     form.appendChild(descLabel);
 
-    const descInput = document.createElement('textarea');
+    const descInput: HTMLTextAreaElement = document.createElement('textarea');
     descInput.name = 'humanDescription';
+    descInput.rows = 8;
     descInput.required = true;
     form.appendChild(descInput);
 
-    const submitButton = document.createElement('button');
+    const submitButton: HTMLButtonElement = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.textContent = taskId ? 'Update Task' : 'Create Task';
     form.appendChild(submitButton);
