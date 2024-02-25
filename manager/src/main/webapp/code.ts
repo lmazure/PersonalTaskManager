@@ -26,7 +26,7 @@ function refreshTaskTable(): void {
             }
             data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
                 const row = table.insertRow(-1);
-                row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td><td><button onclick="editTask('${task.uuid}');">✎</button></td><button onclick="deleteTask('${task.uuid}');">🗑</button></td><td>`;
+                row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td><td><button onclick="openTaskDialog('${task.uuid}');">✎</button></td><button onclick="deleteTask('${task.uuid}');">🗑</button></td><td>`;
             });
         })
         .catch(error => console.error('Error fetching tasks:', error));
@@ -54,42 +54,6 @@ function getTimestamp(): string {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}[${timezone}]`;
 }
 
-function openTaskDialog(): void {
-    const humanId: string | null = prompt('Enter human ID:');
-    if (humanId === null) {
-        return;
-    }
-    const humanDescription: string | null = prompt('Enter human description:');
-    if (humanDescription === null) {
-        return;
-    }
-
-    const taskData: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; } = {
-        uuid: getUUID(),
-        clientTimeStamp: getTimestamp(),
-        humanId: humanId,
-        humanDescription: humanDescription
-    };
-
-    fetch('http://localhost:8080/api/tasks/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(taskData)
-    })
-        .then((response: Response) => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error('Failed to create task: ' + response.status);
-            }
-        })
-        .then((message: string) => {
-            console.log('Task created:', message);
-            refreshTaskTable();
-        })
-        .catch((error: string) => console.error('Error creating task: ', error));
-}
-
 function deleteTask(taskId: string): void {
     fetch(`http://localhost:8080/api/tasks/${taskId}`, {
         method: 'DELETE'
@@ -106,4 +70,92 @@ function deleteTask(taskId: string): void {
             refreshTaskTable();
         })
         .catch((error: string) => console.error('Error deleting task: ', error));
+}
+
+function openTaskDialog(taskId: string | null = null): void {
+    const dialog = document.createElement('dialog');
+    dialog.setAttribute('open', '');
+
+    const title = document.createElement('h3');
+    title.textContent = taskId ? 'Edit Task' : 'Create Task';
+    dialog.appendChild(title);
+
+    const form = document.createElement('form');
+    form.method = 'dialog';
+
+    const idLabel = document.createElement('label');
+    idLabel.textContent = 'Human ID:';
+    form.appendChild(idLabel);
+
+    const idInput = document.createElement('input');
+    idInput.type = 'text';
+    idInput.name = 'humanId';
+    idInput.required = true;
+    form.appendChild(idInput);
+
+    const descLabel = document.createElement('label');
+    descLabel.textContent = 'Description:';
+    form.appendChild(descLabel);
+
+    const descInput = document.createElement('textarea');
+    descInput.name = 'humanDescription';
+    descInput.required = true;
+    form.appendChild(descInput);
+
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = taskId ? 'Update Task' : 'Create Task';
+    form.appendChild(submitButton);
+
+    // Prepopulate form if taskId is provided
+    if (taskId) {
+        fetch(`http://localhost:8080/api/tasks/${taskId}`)
+            .then((response: Response) => response.json())
+            .then((task: { humanId: string; humanDescription: string }) => {
+                idInput.value = task.humanId;
+                descInput.value = task.humanDescription;
+            })
+            .catch((error: string) => console.error('Error fetching task:', error));
+    }
+
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const taskData = {
+            uuid: taskId || getUUID(),
+            clientTimeStamp: getTimestamp(),
+            humanId: idInput.value,
+            humanDescription: descInput.value
+        };
+
+        const method = taskId ? 'PUT' : 'POST';
+        const url = taskId ? `http://localhost:8080/api/tasks/${taskId}` : 'http://localhost:8080/api/tasks/';
+
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(taskData)
+        })
+            .then((response: Response) => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error(`Failed to ${taskId ? 'update' : 'create'} task: ` + response.status);
+                }
+            })
+            .then((message: string) => {
+                console.log(`Task ${taskId ? 'updated' : 'created'}:`, message);
+                refreshTaskTable();
+                dialog.close();
+            })
+            .catch((error: string) => console.error(`Error ${taskId ? 'updating' : 'creating'} task: `, error));
+    };
+
+    const cancelButton = document.createElement('button');
+    cancelButton.type = 'button';
+    cancelButton.textContent = 'Cancel';
+    cancelButton.onclick = () => dialog.close();
+    form.appendChild(cancelButton);
+
+    dialog.appendChild(form);
+    document.body.appendChild(dialog);
 }
