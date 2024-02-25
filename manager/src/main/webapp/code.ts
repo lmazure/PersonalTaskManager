@@ -3,7 +3,7 @@
 function displayTaskTable(): void {
     const table: HTMLTableElement = document.createElement('table');
     table.id = "taskTable";
-    table.innerHTML = `<tr><th>Timestamp</th><th>ID</th><th>Description</th></tr>`;
+    table.innerHTML = `<tr><th>Timestamp</th><th>ID</th><th>Description</th><th></th><th></th></tr>`;
     document.body.appendChild(table);
 }
 
@@ -26,7 +26,7 @@ function refreshTaskTable(): void {
             }
             data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
                 const row = table.insertRow(-1);
-                row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td>`;
+                row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td><td><button onclick="editTask('${task.uuid}');">✎</button></td><button onclick="deleteTask('${task.uuid}');">🗑</button></td><td>`;
             });
         })
         .catch(error => console.error('Error fetching tasks:', error));
@@ -88,5 +88,22 @@ function openTaskDialog(): void {
             refreshTaskTable();
         })
         .catch((error: string) => console.error('Error creating task: ', error));
+}
 
+function deleteTask(taskId: string): void {
+    fetch(`http://localhost:8080/api/tasks/${taskId}`, {
+        method: 'DELETE'
+    })
+        .then((response: Response) => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Failed to delete task: ' + response.status);
+            }
+        })
+        .then((message: string) => {
+            console.log('Task deleted:', message);
+            refreshTaskTable();
+        })
+        .catch((error: string) => console.error('Error deleting task: ', error));
 }
