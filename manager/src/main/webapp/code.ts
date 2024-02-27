@@ -3,30 +3,24 @@
 function displayTaskTable(): void {
     const table: HTMLTableElement = document.createElement('table');
     table.id = "taskTable";
-
-    // Create and append the header row
+    // the header row
     const headerRow: HTMLTableRowElement = table.createTHead().insertRow(0);
-
-    // Create and append the 'Timestamp' header cell
+    // timestamp
     const timeStampHeader: HTMLTableCellElement = document.createElement('th');
     timeStampHeader.textContent = 'Timestamp';
     headerRow.appendChild(timeStampHeader);
-
-    // Create and append the 'ID' header cell
+    // ID
     const idHeader: HTMLTableCellElement = document.createElement('th');
     idHeader.textContent = 'ID';
     headerRow.appendChild(idHeader);
-
-    // Create and append the 'Description' header cell
+    // description
     const descriptionHeader: HTMLTableCellElement = document.createElement('th');
     descriptionHeader.textContent = 'Description';
     headerRow.appendChild(descriptionHeader);
-
-    // Create and append an empty header cell for the edit button column
+    // edit button column
     const editHeader: HTMLTableCellElement = document.createElement('th');
     headerRow.appendChild(editHeader);
-
-    // Create and append an empty header cell for the delete button column
+    // delete button column
     const deleteHeader: HTMLTableCellElement = document.createElement('th');
     headerRow.appendChild(deleteHeader);
     document.body.appendChild(table);
@@ -49,44 +43,36 @@ function refreshTaskTable(): void {
             while (table.rows.length > 1) {
                 table.deleteRow(1);
             }
-            //row.innerHTML = `<td>${task.clientTimeStamp}</td><td>${task.humanId}</td><td>${task.humanDescription}</td><td><button onclick="openTaskDialog('${task.uuid}');">✎</button></td><button onclick="deleteTask('${task.uuid}');">🗑</button></td><td>`;
             const fragment = document.createDocumentFragment();
             data.forEach((task: { uuid: string; clientTimeStamp: string; humanId: string; humanDescription: string; }) => {
-                // Create a new table row
                 const row: HTMLTableRowElement = document.createElement('tr');
-
-                // Create and append a cell for the timestamp
+                // timestamp
                 const timeStampCell: HTMLTableCellElement = document.createElement('td');
                 timeStampCell.textContent = task.clientTimeStamp;
                 row.appendChild(timeStampCell);
-
-                // Create and append a cell for the ID
+                // ID
                 const idCell: HTMLTableCellElement = document.createElement('td');
                 idCell.textContent = task.humanId;
                 row.appendChild(idCell);
-
-                // Create and append a cell for the description
+                // description
                 const descriptionCell: HTMLTableCellElement = document.createElement('td');
                 descriptionCell.textContent = task.humanDescription;
                 row.appendChild(descriptionCell);
-
-                // Create and append a cell with the edit button
+                // edit button
                 const editCell: HTMLTableCellElement = document.createElement('td');
                 const editButton: HTMLButtonElement = document.createElement('button');
                 editButton.textContent = '✎';
                 editButton.addEventListener('click', () => openTaskDialog(task.uuid));
                 editCell.appendChild(editButton);
                 row.appendChild(editCell);
-
-                // Create and append a cell with the delete button
+                // delete button
                 const deleteCell: HTMLTableCellElement = document.createElement('td');
                 const deleteButton: HTMLButtonElement = document.createElement('button');
                 deleteButton.textContent = '🗑';
                 deleteButton.addEventListener('click', () => deleteTask(task.uuid));
                 deleteCell.appendChild(deleteButton);
                 row.appendChild(deleteCell);
-
-                // Append the row to the document fragment
+                // append the row
                 fragment.appendChild(row);
             });
             table.appendChild(fragment);

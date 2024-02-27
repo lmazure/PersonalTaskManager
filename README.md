@@ -32,4 +32,3 @@ java -jar target/manager-1.0.jar
 
 Test on URL
 - http://localhost:8080/index.html
-- http://localhost:8080/api/tasks/
