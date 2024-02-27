@@ -1,3 +1,5 @@
+## Description
+
 Yet another playground to
 - evaluate VSCode's Java support
 - discover GitHub Actions
@@ -15,13 +17,18 @@ What I do not know yet:
 
 ------
 
-build and run
+## Usage
+
+Build and run
 ```bash
 cd manager
-mvn -f pom.xml clean package
+mvn clean package
+cd src/main/webapp
+tsc
+cd ../../..
 java -jar target/manager-1.0.jar
 ```
 
 
 Test on URL
-- http://localhost:8080/tasks/
+- http://localhost:8080/index.html

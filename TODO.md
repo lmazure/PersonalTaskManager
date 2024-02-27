@@ -1,5 +1,7 @@
-install maven on F
+- initial UI display
+    - multiple space
+    - new line
 
-[ ] test linter  
+- save data
 
-
+- improve UI

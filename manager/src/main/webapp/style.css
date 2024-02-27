@@ -1,0 +1,9 @@
+#taskDialog {
+    width: 700px;
+    /* height: 500px; */
+  }
+
+#taskForm {
+  display: flex;
+  flex-direction: column;
+}
